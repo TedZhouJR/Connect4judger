@@ -1,0 +1,3 @@
+data/connect*
+data/*.txt
+__pycache__
