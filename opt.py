@@ -31,6 +31,14 @@ def parse_args():
     # train
     parser.add_argument('--epochs', type=int, default=10,
                         help='Number of epochs.')
+    parser.add_argument('--batch_size', type=int, default=128,
+                        help='Batch size.')
+    parser.add_argument('--lr', type=float, default=3e-4,
+                        help='Learning rate.')
+    parser.add_argument('--optim', type=str, default="adam",
+                        help='Optimizer type, currently support adam.')
+    parser.add_argument('--model_path', type=str, default="result/params.pt",
+                        help='Path to save or load model.')
 
     args = parser.parse_args()
     return args

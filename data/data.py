@@ -20,7 +20,7 @@ class Connect4Dataset(torch.utils.data.Dataset):
 
     def __getitem__(self, idx):
         src = self.data['Source'][idx]
-        tgt = self.data['Target'][idx].float()
+        tgt = self.data['Target'][idx]
         sample = {'Source': src, 'Target': tgt}
         return sample
 
@@ -33,10 +33,19 @@ class Connect4Dataset(torch.utils.data.Dataset):
             src.append(src_tmp)
         for out in outputs:
             tgt_tmp = [lookup_dict[out]]
-            tgt_tmp = torch.FloatTensor(tgt_tmp)
+            tgt_tmp = torch.LongTensor(tgt_tmp)
             tgt.append(tgt_tmp)
         src = torch.stack(src)
         tgt = torch.cat(tgt)
+        return src, tgt
+
+class Connect4Collect:
+    def __init__(self):
+        pass
+
+    def __call__(self, batch):
+        src = torch.stack([x['Source'] for x in batch])
+        tgt = torch.stack([x['Target'] for x in batch])
         return src, tgt
 
 def split_data(args, shuffle=True, train_ratio=0.8, val_ratio=0.1):

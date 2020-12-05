@@ -5,10 +5,11 @@ class MLP(nn.Module):
     def __init__(self, input_dim, hidden_dims, dropout, out_dim):
         super(MLP, self).__init__()
         self.hidden_dims = hidden_dims
-        self.num_layers = len(hidden_dims)
+        self.num_layers = len(hidden_dims) + 1
         self.dropout = dropout
         self.layers = []
 
+        dims = []
         for i in range(self.num_layers):
             if i == 0:
                 dim1 = input_dim
@@ -18,7 +19,9 @@ class MLP(nn.Module):
                 dim2 = out_dim
             else:
                 dim2 = hidden_dims[i]
+            dims.append((dim1, dim2))
             self.layers.append(nn.Linear(in_features=dim1, out_features=dim2))
+        self.layers = nn.ModuleList(self.layers)
 
     def forward(self, x):
         for i, layer in enumerate(self.layers):

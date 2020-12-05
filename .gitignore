@@ -1,3 +1,4 @@
 data/connect*
 data/*.txt
 __pycache__
+result/*
