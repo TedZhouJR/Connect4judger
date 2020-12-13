@@ -1,9 +1,9 @@
 import torch, random
 from opt import parse_args
-lookup_dict = {"x":-1, "o":1, "b":0, "-":0, "+":1, "=":2}
+lookup_dict = {"x":0, "o":2, "b":1, "-":0, "+":1, "=":2}
 
 class Connect4Dataset(torch.utils.data.Dataset):
-    def __init__(self, ipf, opf):
+    def __init__(self, ipf, opf, gpu=False):
         with open(ipf) as input_f:
             inputs = input_f.readlines()
             inputs = [line.strip() for line in inputs]
@@ -13,6 +13,9 @@ class Connect4Dataset(torch.utils.data.Dataset):
         assert len(inputs) == len(outputs)
         self.data_size = len(inputs)
         src, tgt = self.lookup(inputs, outputs)
+        if gpu:
+            src = src.cuda()
+            tgt = tgt.cuda()
         self.data = {"Source": src, "Target": tgt}
 
     def __len__(self):
@@ -28,8 +31,10 @@ class Connect4Dataset(torch.utils.data.Dataset):
         src = []
         tgt = []
         for inp in inputs:
-            src_tmp = [lookup_dict[i] for i in inp]
-            src_tmp = torch.FloatTensor(src_tmp)
+            src_tmp = [lookup_dict[i] == 0 for i in inp]
+            src_tmp2 = [lookup_dict[i] == 2 for i in inp]
+            src_tmp.extend(src_tmp2)
+            src_tmp = torch.LongTensor(src_tmp)
             src.append(src_tmp)
         for out in outputs:
             tgt_tmp = [lookup_dict[out]]
@@ -40,11 +45,14 @@ class Connect4Dataset(torch.utils.data.Dataset):
         return src, tgt
 
 class Connect4Collect:
-    def __init__(self):
+    def __init__(self, fl=True):
+        self.fl = fl
         pass
 
     def __call__(self, batch):
         src = torch.stack([x['Source'] for x in batch])
+        if self.fl:
+            src = src.float()
         tgt = torch.stack([x['Target'] for x in batch])
         return src, tgt
 

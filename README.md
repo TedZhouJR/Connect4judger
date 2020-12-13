@@ -1,5 +1,5 @@
 ## Connect-4 Judger
-* A judger which can judge win/loss of any connect-4 game.
+* A judger which can judge win/loss of any ongoing connect-4 game.
 * Also a pytorch framework for future ML assignments, keep updating...
 
 ## Dataset

@@ -18,26 +18,32 @@ def parse_args():
     parser.add_argument('--test_output', type=str, default="data/test.out.txt",
                         help='Output test text file path.')
     # model
-    parser.add_argument('--model', type=str, default="mlp",
-                        help='Model type, currently support mlp.')
+    parser.add_argument('--model', type=str, default="linear",
+                        help='Model type, currently support mlp, attention, linear.')
     parser.add_argument('--input_size', type=int, default=42,
                         help='Size of input.')
     parser.add_argument('--output_size', type=int, default=3,
                         help='Size of output.')
-    parser.add_argument('--hidden_size', type=list, default=[12],
+    parser.add_argument('--hidden_size', type=list, default=[256, 64],
                         help='Size of hidden layers.')
-    parser.add_argument('--dropout', type=float, default=0.3,
+    parser.add_argument('--layers', type=int, default=5,
+                        help='Number of hidden layers.')
+    parser.add_argument('--dropout', type=float, default=0.1,
                         help='Dropout ratio.')
     # train
-    parser.add_argument('--epochs', type=int, default=10,
+    parser.add_argument('--epochs', type=int, default=100,
                         help='Number of epochs.')
+    parser.add_argument('--gpu', type=bool, default=True,
+                        help='Use gpu.')
     parser.add_argument('--batch_size', type=int, default=128,
                         help='Batch size.')
-    parser.add_argument('--lr', type=float, default=3e-4,
+    parser.add_argument('--lr', type=float, default=2e-3,
                         help='Learning rate.')
-    parser.add_argument('--optim', type=str, default="adam",
-                        help='Optimizer type, currently support adam.')
+    parser.add_argument('--optim', type=str, default="rmsprop",
+                        help='Optimizer type, currently support adam, sgd, rmsprop.')
     parser.add_argument('--model_path', type=str, default="result/params.pt",
+                        help='Path to save or load model.')
+    parser.add_argument('--grad_path', type=str, default="result/grad.pt",
                         help='Path to save or load model.')
 
     args = parser.parse_args()

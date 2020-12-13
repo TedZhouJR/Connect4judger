@@ -1,5 +1,6 @@
-import torch
+import torch, math
 from torch import nn
+import torch.nn.functional as F
 
 class MLP(nn.Module):
     def __init__(self, input_dim, hidden_dims, dropout, out_dim):
@@ -26,6 +27,7 @@ class MLP(nn.Module):
     def forward(self, x):
         for i, layer in enumerate(self.layers):
             x = layer(x)
+            x = F.relu(x)
             if i < len(self.layers) - 1:
                 x = nn.functional.dropout(x, p=self.dropout, training=self.training)
         return torch.softmax(x, dim=-1)
